@@ -1,0 +1,209 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+3+5
+6+10
+
+5-1
+5*2
+(5-2)/2
+28%%6
+#el numeral es para los comentarios
+# % devuelve el residuo(mod) 
+```
+
+```{r}
+x <- 10
+x
+
+my_character <- "universe"
+my_logical <- FALSE
+my_character
+my_logical
+```
+```{r}
+#como definir vectores
+numeric_vector <- c(1, 10, 49)
+numeric_vector
+
+character_vector <- c("a","b","c")
+boolean_vector <- c(TRUE,FALSE,TRUE)
+
+character_vector
+boolean_vector
+```
+Nombrando un Vector
+
+```{r}
+#datos del vector
+poker_vector <- c(140, -50, 20, -120, 240)
+roulette_vector <- c(-24, -50, 100, 350, 10)
+#titulos del vector
+names(poker_vector) <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+names(roulette_vector) <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+#llamada al vector
+poker_vector
+```
+
+Operadores Lógicos
+Comparando y Seleccionando
+```{r}
+age <- 17
+result <- age >= 18
+result
+a_vector <- c(1,2,3)
+b_vector <- c(4,5,6)
+
+total_vector <- a_vector + b_vector
+total_vector
+#sumar entre vectores
+total_daily <- poker_vector + roulette_vector
+total_daily
+#suma datos de 1 vector
+total_poker <- sum(poker_vector)
+total_poker
+#seleccionar un elemento de un vector
+poker_vector[3]
+#seleccionar varios elementos de un vector
+poker_vector[c(1,3,4)]
+#seleccionar una porcion del vector
+roulette_vector[2:5]
+
+poker_start <- poker_vector[c("Monday","Tuesday","Wednesday")]
+mean(poker_start)
+#indica quienes cumplen con x condicion
+selection_vector <- poker_vector >0
+selection_vector
+
+poker_winning_days <- poker_vector[selection_vector]
+poker_winning_days
+```
+
+
+Matrices
+```{r}
+matrix (1:9,byrow=TRUE,nrow=3)
+```
+```{r}
+matrix (1:9,byrow=FALSE,nrow=3)
+```
+
+```{r}
+new_hope <- c(460.998, 314.4)
+empire_strike <- c(2980.475, 247.900)
+return_jedi <- c(309.306, 165.8)
+
+box_office <- c(new_hope, empire_strike, return_jedi)
+box_office
+
+star_wars_matrix <- matrix(box_office,byrow = TRUE, nrow=3)
+star_wars_matrix
+
+region <- c("US", "non-USA")
+titles <- c("A new Hope", "The Empire Strikes Back", "Return of the Jedi")
+
+#para asignar nombre a filas y columnas se usa palabras reservadas colnames y rownames
+colnames(star_wars_matrix) <- region
+rownames(star_wars_matrix) <- titles
+
+star_wars_matrix
+
+```
+
+#rowSums(), esta palabra reservada suma los valores de columnas de una matriz
+```{r}
+worldwide_vector <- rowSums(star_wars_matrix)
+worldwide_vector
+
+#cbind agrega una nueva columna a la estructura ya creada
+all_wars_variable <- cbind(star_wars_matrix,worldwide_vector)
+all_wars_variable
+
+#colSums suma las columnas de la matriz
+worldwide_cols <- colSums(all_wars_variable)
+worldwide_cols 
+
+#rbind agrega una fila mas a la matriz
+all_wars_variable <- rbind(all_wars_variable, worldwide_cols)
+all_wars_variable
+```
+
+#Seleccion de elementos de una matriz
+```{r}
+non_us_all <- all_wars_variable[1:3,2] #el primer argumento son las filas, el segundo argumento son columnas
+non_us_all
+
+mean(non_us_all)
+```
+
+#aritmetica con matrices
+```{r}
+us_all <- all_wars_variable[1:3,1]
+us_all <- us_all * 0.12
+us_all
+```
+#herramienta factor, sirve para clasificar/agrupar elementos 
+```{r}
+sex_vector <- c("Male", "Female", "Female", "Male" ,"Male") #categoría nominal
+
+factor_sex_vector <- factor(sex_vector)
+factor_sex_vector
+
+temperature_vector <- c("High", "Low", "High", "Low", "Medium")
+factor_temperature_vector <- factor(temperature_vector,order=TRUE,levels = c("Low", "Medium", "High"))
+factor_temperature_vector
+
+```
+```{r}
+survey_vector <- c("M", "F", "M", "M")
+factor_survey_vector <- factor(survey_vector)
+factor_survey_vector
+
+levels(factor_survey_vector) <- c("Female", "Male")
+factor_survey_vector
+```
+#summarizing a factor
+```{r}
+summary(survey_vector)
+summary(factor_survey_vector)
+
+male <- factor_survey_vector[1]
+male
+
+female <- factor_survey_vector[2]
+female
+
+speed_vector <- c("medium", "slow", "medium", "fast")
+factor_speed_vector <- factor(speed_vector, ordered = TRUE, levels =c("slow","medium","fast")) #aca es donde se le asigna un orden al factor
+factor_speed_vector
+
+da2 <- factor_speed_vector[2]
+da3 <- factor_speed_vector[1]
+
+da2
+da3
+
+da2 < da3
+```
+#DATA FRAMES
+
+```{r}
+mtcars
+
+head(mtcars)
+tail(mtcars)
+```
+
+
+
+
+
+
+
