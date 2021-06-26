@@ -97,5 +97,37 @@ for (t in temp) {
 }
 ```
 
+#lapply y funciones anonimas
+```{r}
+(function(x) {3*x})(3) #se llama a la funcion con los parentesis, y no es necesario nombrar a la funcion
+
+pioneers <- c("GAUSS:1777","BAYES:1702","PASCAL:1623","PEARSON:1857")
+split <- strsplit(pioneers,split = ":") #indica que divide la cadena por medio de los dos puntos :
+
+split_low <- lapply(split, tolower) #convierte a minuscula los elementos de la lista
+
+split
+split_low
+
+names <- lapply(split_low,function(x){x[1]}) #con esta función seleccionamos unicamente el primer dato de cada espacio de la lista/vector
+names
+
+years <- lapply(split_low, function(x){x[2]})
+years
+```
+#usando lapply con argumentos adicionales
+
+```{r}
+select_e <- function(x,index){
+  x[index]
+}
+
+names <- lapply(split_low, select_e,1)
+names
+
+years <- lapply(split_low, select_e,2)
+years
+```
+
 
 
