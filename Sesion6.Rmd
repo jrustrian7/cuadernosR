@@ -1,0 +1,160 @@
+---
+title: "Cuaderno #5 Julio Rustrian"
+output: html_notebook
+---
+
+#agrupando datos
+```{r}
+library(tidyverse)
+library(gapminder)
+
+gapminder %>%
+  summarize(medianLifeExp = median(lifeExp))
+
+gapminder %>%
+  filter (year==1957) %>%
+  summarize(medianLifeExp =median(lifeExp))
+
+gapminder %>%
+  filter (year ==1957) %>%
+  summarize(edianLifeExp = median(lifeExp),max(gdpPercap))
+
+#counties <- read_csv("counties.csv")
+#counties
+```
+
+#agrupando por año en especifico
+```{r}
+gapminder %>%
+  group_by(year) %>%
+  summarize(edianLifeExp = median(lifeExp),max(gdpPercap))
+```
+#agrupando por año y otra variable
+```{r}
+gapminder %>%
+  filter(year==1957)%>%
+  group_by(continent) %>%
+  summarize(edianLifeExp = median(lifeExp),max(gdpPercap))
+```
+```{r}
+gapminder %>%
+  group_by(continent,year) %>%
+  summarize(edianLifeExp = median(lifeExp),max(gdpPercap))
+```
+ 
+```{r}
+by_year <- gapminder %>%
+  group_by(year) %>%
+  summarize(medianLifeExp = median(lifeExp),max(gdpPercap))
+
+by_year
+
+ggplot(by_year, aes(x=year,y=medianLifeExp)) +
+  geom_point()
+```
+```{r}
+by_year_continent <- gapminder %>%
+  group_by(continent,year) %>%
+  summarize(medianGdPercap = median(gdpPercap))
+
+by_year_continent
+
+ggplot(by_year_continent, aes(x=year,y=medianGdPercap, color=continent)) +
+  geom_point()
+```
+#tipos de geometria
+
+#gráfico de línea
+```{r}
+by_year <- gapminder %>%
+  group_by(year) %>%
+  summarize(medianGdpPercap = median(gdpPercap))
+
+ggplot(by_year, aes(x=year,y = medianGdpPercap)) +
+  geom_line()
+```
+```{r}
+by_year_continent <- gapminder %>%
+  group_by(year, continent) %>%
+  summarize(medianGdpPercap = median(gdpPercap))
+
+ggplot(by_year_continent, aes(x=year,y = medianGdpPercap, color=continent)) +
+  geom_line()
+```
+ 
+#grafico de barras
+```{r}
+oceania_1952 <- gapminder %>%
+  filter(continent == "Oceania",year == 1952)
+
+oceania_1952
+
+ggplot(oceania_1952, aes(x=country,y=gdpPercap, fill = country)) +
+  geom_col()
+```
+
+#histograma
+```{r}
+gapminder_1952 <-gapminder %>%
+  filter(year == 1952) %>%
+  mutate(pop_by_mil = pop /1000000)
+
+gapminder_1952
+
+ggplot(gapminder_1952,aes(x=pop_by_mil)) +
+  geom_histogram()
+```
+#funcion bins nos indica en cuantos segmentos se divide la grafica
+```{r}
+gapminder_1952 <-gapminder %>%
+  filter(year == 1952) %>%
+  mutate(pop_by_mil = pop /1000000)
+
+gapminder_1952
+
+ggplot(gapminder_1952,aes(x=pop_by_mil)) +
+  geom_histogram(bins = 100)
+```
+ 
+```{r}
+gapminder_1952 <-gapminder %>%
+  filter(year == 1952)
+
+gapminder_1952
+
+ggplot(gapminder_1952,aes(x=pop, fill=continent)) +
+  geom_histogram(bins = 100) +
+  scale_x_log10()
+```
+
+#box plots, nos indica la mediana dentro de un rango de datos
+```{r}
+gapminder_1952 <- gapminder %>%
+  filter(year ==1952)
+
+ggplot(gapminder_1952, aes(x=continent, y=gdpPercap)) +
+  geom_boxplot()
+```
+```{r}
+gapminder_1952 <- gapminder %>%
+  filter(year ==1952)
+
+ggplot(gapminder_1952, aes(x=continent, y=gdpPercap)) +
+  geom_boxplot()+
+  scale_y_log10()
+```
+#data manipulation with dplyr
+
+```{r}
+counties <- read_csv("counties.csv")
+counties
+```
+
+```{r}
+counties %>%
+  select(state,county, population, men, women) %>%
+  mutate(proportion_men =men/population) %>%
+  filter(population > 10000) %>%
+  arrange(desc(proportion_men))
+```
+
