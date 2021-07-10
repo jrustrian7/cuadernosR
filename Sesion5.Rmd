@@ -65,8 +65,40 @@ ggplot(gapminder_1952, aes(x=pop,y=gdpPercap)) + #primero los datos, segundo los
   geom_point() #aca se le indica que sera un grafico de puntos o la forma que querramos darle
   
 ```
+#Log Scaling
+
+```{r}
+ggplot(gapminder_1952, aes(x=pop, y=gdpPercap)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+```
+#coloreando la gráfica
+```{r}
+ggplot(gapminder_1952, aes(x=pop, y=lifeExp, color=continent)) + #plotea los puntos, pero asigna un color segun continente
+  geom_point() +
+  scale_x_log10()
+```
 
 
+```{r}
+gapminder_1952
+
+ggplot(gapminder_1952, aes(x=pop, y =lifeExp))+
+  geom_point() +
+  scale_x_log10() +
+  facet_wrap(~continent) #grafico por variable
+```
+
+
+```{r}
+gapminder_1952
+
+ggplot(gapminder, aes(x=pop, y =lifeExp))+
+  geom_point() +
+  scale_x_log10() +
+  facet_wrap(~year) #grafico por variable
+```
 
 
 
