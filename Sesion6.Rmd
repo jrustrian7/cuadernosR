@@ -158,3 +158,108 @@ counties %>%
   arrange(desc(proportion_men))
 ```
 
+#the count verb
+```{r}
+counties_selected <- counties %>%
+  select(county, region, state, population, citizens)
+
+counties_selected %>%
+  count(region)
+```
+
+```{r}
+counties_selected <- counties %>%
+  select(county, region, state, population, citizens, walk)
+
+counties_selected %>%
+  count(region, sort = TRUE)
+
+counties_selected %>%
+  count(state)
+
+counties_selected %>%
+  count(state, wt = citizens) #wt le asigna un peso ponderado segun la variable que se le indique
+
+counties_selected %>%
+  count(state, wt = citizens) %>% #wt le asigna un peso ponderado segun la variable que se le indique
+  arrange(desc(n)) #se ordena el paso anterior
+
+test <- counties_selected %>%
+  mutate(population_walk = population*walk/100) %>%
+  count(state,wt=population_walk,sort = TRUE)
+
+test %>%
+  select(state,number=n)
+```
+
+#summarizing
+```{r}
+counties_selected <-counties %>%
+  select(county, population, income, unemployment)
+
+counties_selected %>%
+  summarize(min_popularion=min(population), max_unemplorment=max(unemployment), average_income=mean(income))
+
+counties_selected <-counties %>%
+  select(state, county, population, land_area)
+
+counties_selected %>%
+  group_by(state) %>%
+  summarize(total_area=sum(land_area), total_population=sum(population))
+
+counties_selected <- counties %>%
+  select(region, state, county, population)
+
+counties_selected %>%
+  group_by(region, state) %>%
+  summarize(total_pop = sum(population)) %>%
+  summarize(average_pop=mean(total_pop), median_pop=median(total_pop))
+```
+
+#the top_n verb
+```{r}
+counties_selected <- counties %>%
+  select(region, state, county, metro, population, walk)
+
+counties_selected %>%
+  group_by(region) %>%
+  top_n(1, walk)#muestra el top de las listas que deseemos, en funcion de la variable que le indiquemos
+
+counties_selected <- counties %>%
+  select(region, state, county, population, income)
+
+counties_selected %>%
+  group_by(region, state) %>%
+  summarize(average_income = mean(income)) %>%
+  #ungroup()%>%
+  top_n(1, average_income)
+```
+
+```{r}
+counties_selected <- counties %>%
+  select(state, metro, population)
+
+counties_selected %>%
+  group_by(state, metro) %>%
+  summarize(total_pop = sum(population))
+
+counties_selected %>%
+  group_by(state, metro) %>%
+  summarize(total_pop = sum(population)) %>%
+  top_n(1, total_pop)
+
+counties_selected %>%
+  group_by(state, metro) %>%
+  summarize(total_pop = sum(population)) %>%
+  top_n(1, total_pop) %>%
+  ungroup() %>%
+  count(metro)
+
+counties_selected %>%
+  group_by(state, metro) %>%
+  summarize(total_pop = sum(population)) %>%
+  top_n(1, total_pop) %>%
+  ungroup() %>%
+  count(metro, wt = total_pop)
+```
+
