@@ -1,0 +1,124 @@
+---
+title: "Cuaderno #8 - Julio Rustrian"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+
+inventories <- read_csv("inventories.csv")
+inventory_parts <- read_csv("inventory_parts.csv")
+colors <- read_csv("colors.csv")
+
+inventories
+inventory_parts
+colors
+```
+
+```{r}
+inventory_parts_joined <- inventories %>%
+  inner_join(inventory_parts, by = c("id" = "inventory_id")) %>%
+  select(-id, -version) %>% #con el signo - indica que no quiero que muestre esas columnas
+  arrange(desc(quantity))
+
+inventory_parts_joined
+
+batmobile <- inventory_parts_joined %>%
+  filter(set_num == "7784-1") %>%
+  select(-set_num)
+
+batmobile
+
+batwing <- inventory_parts_joined %>%
+  filter(set_num == "70916-1") %>%
+  select(-set_num)
+
+batwing
+
+batmobile %>%
+  inner_join(batwing, c("part_num", "color_id"), suffix = c("_batmobile", "_batwing")) #utilizamos el inner_join de esta forma para identificar elementos que coincidan con las dos caracteristicas indicadas, en este caso part_num y color_id
+```
+
+#no importa que tabla se seleccione primero para el inner_join, lo que cuenta es la variable por la cual se realizara el inner_join
+```{r}
+parts %>%
+  inner_join(inventory_parts, by = "part_num")
+
+inventory_parts %>%
+  inner_join(parts, by = "part_num")
+```
+
+```{r}
+set_complete <- sets %>%
+  inner_join(inventories, by = "set_num") %>%
+  inner_join(inventory_parts, by = c("id" = "inventory_id")) %>%
+  inner_join(colors, by = c("color_id" = "id"), suffix = c("_set", "_color")) %>%
+  count(name_color) %>%
+  arrange(desc(n))
+
+set_complete
+view(set_complete)
+```
+
+#left_join - incluye todos los elementos de la tabla izquierda y los elementos repetidos de la tabla derecha
+```{r}
+batmobile %>%
+  inner_join(batwing, c("part_num", "color_id"), suffix = c("_batmobile","_batwing"))
+
+batmobile %>%
+  left_join(batwing, c("part_num", "color_id"), suffix = c("_batmobile","_batwing"))
+```
+
+
+```{r}
+millennium_falcon <- inventory_parts_joined %>%
+  filter(set_num == "7965-1")
+
+millennium_falcon
+
+star_destroyer <- inventory_parts_joined %>%
+  filter(set_num == "75190-1")
+
+star_destroyer
+
+millennium_falcon %>%
+  left_join(star_destroyer, by = c("part_num","color_id"), suffix = c("_falcon", "_star_destroyer"))
+
+millennium_falcon_colors <-
+  millennium_falcon %>%
+  group_by(color_id) %>%
+  summarize(total_quanity = sum(quantity))
+
+millennium_falcon_colors
+
+star_destroyer_colors <-
+  star_destroyer %>%
+  group_by(color_id) %>%
+  summarize(total_quanity = sum(quantity))
+
+star_destroyer_colors
+
+millennium_falcon_colors %>%
+  left_join(star_destroyer_colors, by = "color_id", suffix = c("_falcon", "_star_destroyer") )
+```
+
+```{r}
+parts %>%
+  count(part_cat_id) %>%
+  right_join(part_categories, by = c("part_cat_id"="id")) %>%
+  replace_na(list(n = 0)) #list recibe la variable y el valor por el cual se quiere reemplazar N/A
+```
+
+```{r}
+themes
+```
+
+```{r}
+themes %>%
+  inner_join(themes, by = c("id" = "parent_id"), suffix = c("_parent", "_child"))
+```
+
+
+
+
+
